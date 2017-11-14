@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="lockers:war">
+    <output-path>$PROJECT_DIR$/../lockers/target</output-path>
+    <root id="archive" name="lockers.war">
+      <element id="artifact" artifact-name="lockers:war exploded" />
+    </root>
+  </artifact>
+</component>

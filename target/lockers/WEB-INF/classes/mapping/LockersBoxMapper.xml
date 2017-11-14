@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.tustcs.lockers.dao.LockersBoxMapper" >
+  <resultMap id="BaseResultMap" type="org.tustcs.lockers.entity.LockersBox" >
+    <result column="lockers_id" property="lockersId" jdbcType="VARCHAR" />
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="box_id" property="boxId" jdbcType="INTEGER" />
+    <result column="is_used" property="isUsed" jdbcType="INTEGER" />
+    <result column="avail" property="avail" jdbcType="INTEGER" />
+  </resultMap>
+  <insert id="insert" parameterType="org.tustcs.lockers.entity.LockersBox" >
+    insert into lockers_box (lockers_id, id, box_id, 
+      is_used, avail)
+    values (#{lockersId,jdbcType=VARCHAR}, #{id,jdbcType=INTEGER}, #{boxId,jdbcType=INTEGER}, 
+      #{isUsed,jdbcType=INTEGER}, #{avail,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.tustcs.lockers.entity.LockersBox" >
+    insert into lockers_box
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="lockersId != null" >
+        lockers_id,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="boxId != null" >
+        box_id,
+      </if>
+      <if test="isUsed != null" >
+        is_used,
+      </if>
+      <if test="avail != null" >
+        avail,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="lockersId != null" >
+        #{lockersId,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="boxId != null" >
+        #{boxId,jdbcType=INTEGER},
+      </if>
+      <if test="isUsed != null" >
+        #{isUsed,jdbcType=INTEGER},
+      </if>
+      <if test="avail != null" >
+        #{avail,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateUsed">
+    update lockers_box
+    set is_used=#{status} where box_id=#{boxId}
+  </update>
+  
+  <select id="selectBoxDetail" resultType="org.tustcs.lockers.dto.BoxDetail">
+    select lb.lockers_id,lb.box_id,lb.box_id,lb.is_used,t.type_name,t.cost
+    from lockers_box as lb
+    left join type as t
+    on t.type_id= (select type_id from box where lb.box_id)
+    where box_id=#{boxId}
+  </select>
+
+  <select id="selectByLockersId" resultType="org.tustcs.lockers.entity.LockersBox">
+    select *from lockers_box
+    where lockers_id=#{lockersId}
+  </select>
+
+  <select id="selectBoxId" resultType="java.lang.Integer">
+    select box_id from lockers_box where lockers_id=#{lockersId}
+    and id=#{id}
+  </select>
+</mapper>
